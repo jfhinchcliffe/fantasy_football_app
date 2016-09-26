@@ -1,6 +1,6 @@
 ## Fantasy Football terminal app
 
-Week 3 CoderFactoryAcademy project
+### Week 3 CoderFactoryAcademy project
 
 *Problem*
 - User wants to simulate the result of a football game without having to play.
@@ -16,7 +16,8 @@ Week 3 CoderFactoryAcademy project
 ##Setup
 
 _Classes_
-Team
+
+*Team*
   - name
   - attack
   - defense
@@ -39,12 +40,12 @@ Methods
 
 _Modules_  
 *Menu*
-  (Display amount of teams in competition)
-  Simulate Game
-  See Results
-  See all teams
-  Create Team
-  Delete Team
-  Edit Team
-  New Season
+  - (Display amount of teams in competition)
+  - Simulate Game
+  - See Results
+  - See all teams
+  - Create Team
+  - Delete Team
+  - Edit Team
+  - New Season
 2 file s- past season and current season.
