@@ -99,9 +99,7 @@ module Menu
     while team_complete == false
       verify_name = false
       while verify_name == false
-        puts "Please enter the name of your team:"
-        prompt
-        team_name  = get_input
+        team_name  = MenuHelper.query("Please enter the name of your team")
         if @all_teams.any? {|team| team.name == team_name}
           puts "#{team_name} already taken. Please select a new name."
         else
@@ -110,9 +108,7 @@ module Menu
       end
       verify_attack = false
       while verify_attack == false
-        puts "Please enter the team attack strength (1 to 10)"
-        prompt
-        attack = get_input.to_i
+        attack = MenuHelper.query("Please enter the team attack strength (1 to 10)").to_i
         if attack <= 0 || attack > 10
           puts "Invalid number"
         else
@@ -121,8 +117,7 @@ module Menu
       end
       verify_defense = false
       while verify_defense == false
-        puts "Please enter the team defense strength (1 to 10)"
-        defense = get_input.to_i
+        defense = MenuHelper.query("Please enter the team defense strength (1 to 10)").to_i
         if defense <= 0 || defense > 10
           puts "Invalid number"
         else
@@ -131,9 +126,7 @@ module Menu
       end
       verify_conditions = false
       while verify_conditions == false
-        puts "Does this team play better in wet or dry conditions? ('wet' or 'dry')"
-        prompt
-        condition_preference = get_input.downcase
+        condition_preference = MenuHelper.query("Does this team play better in wet or dry conditions? ('wet' or 'dry')").downcase
         if condition_preference == 'wet' || condition_preference == 'dry'
           verify_conditions = true
         else
@@ -200,24 +193,12 @@ module Menu
   def Menu.edit_team
     clear_screen
     display_team_names
-    puts "Leave the field blank to leave the team info the same"
+    puts "NOTE:".colorize(:red) + " Leave the field blank to leave the team info the same"
     team_to_edit = find_team
-    puts "Please enter the new name for the team"
-    puts "Leave blank to remain the same"
-    prompt
-    new_name = get_input
-    puts "Please enter the new attack value for the team"
-    puts "Leave blank to remain the same"
-    prompt
-    new_attack = get_input
-    puts "Please enter the new defense value for the team"
-    puts "Leave blank to remain the same"
-    prompt
-    new_defense = get_input
-    puts "Please enter the new conditions preference value ('wet' or 'dry') for the team"
-    puts "Leave blank to remain the same"
-    prompt
-    new_conditions_preference = get_input
+    new_name = MenuHelper.query("Please enter the new name for the team")
+    new_attack = MenuHelper.query("Please enter the new attack value for the team")
+    new_defense = MenuHelper.query("Please enter the new defense value for the team")
+    new_conditions_preference = MenuHelper.query("Please enter the new conditions preference value ('wet' or 'dry') for the team")
     team_to_edit.edit_team_values(new_name, new_attack, new_defense, new_conditions_preference)
     puts "New Values".colorize(:green)
     display_formatted_team(team_to_edit)
@@ -227,9 +208,7 @@ module Menu
   def Menu.find_team
     found = false
     while found == false
-      puts "Please enter the name of the team"
-      prompt
-      selection = get_input
+      selection = MenuHelper.query("Enter the name of the team")
       result = MenuHelper.find_team(@all_teams, selection)
       result != false ? found = true : found = false
     end
@@ -244,10 +223,8 @@ module Menu
     else
       page_divide
       display_team_names
-      puts "Enter home team"
-      home_team = find_team
-      puts "Enter away team"
-      away_team = find_team
+      home_team = MenuHelper.query("Enter home team")
+      away_team = MenuHelper.query("Enter away team")
       game = Game.new(home_team, away_team)
       game.play
     end
@@ -264,6 +241,8 @@ module Menu
   end
 
   def Menu.delete_team
+    clear_screen
+    display_team_names
     puts "Delete Team"
     team_to_delete = find_team
     @all_teams.delete(team_to_delete)

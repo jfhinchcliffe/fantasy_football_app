@@ -14,6 +14,7 @@
 - As a user, I want to simulate a game and save the results
 
 ### To Do
+- DRY up menu
 - Setup verification for values  attack and defense should be 1-10 and conditions dry or wet
 - Make sure that team names can't be the same.
 - refactor / dry up some of those long gnarly methods in the menu.rb file

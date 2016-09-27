@@ -1,4 +1,5 @@
 require 'csv'
+require './team'
 module MenuHelper
 
   def MenuHelper.display_team_name(team, display_options)
@@ -9,10 +10,6 @@ module MenuHelper
     puts "Preferred Conditions:".colorize(:yellow) + " #{team.condition_preference}" if display_options[:condition_preference]
   end
 
-  # def Menuhelper.finish_season
-  #   File.open('football_season.csv', 'w') {}
-  # end
-
   def MenuHelper.find_team(teams, team_to_find)
     teams.each do |team|
       if team.name == team_to_find
@@ -20,7 +17,13 @@ module MenuHelper
         return team
       end
     end
-    return = false
+    puts "#{team_to_find} not found"
+    team = false
+  end
+
+  def MenuHelper.query(question)
+    puts question
+    response = gets.strip
   end
 
 
