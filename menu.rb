@@ -1,6 +1,7 @@
 require 'colorize'
 require './team'
 require './game'
+require './season'
 
 module Menu
 
@@ -16,9 +17,9 @@ module Menu
       puts "Please select from the following options"
       puts "1. Simulate Game*"
       puts "2. See Season Results*"
-      puts "3. See All Teams*"
+      puts "3. See All Teams"
       puts "4. Create Team"
-      puts "5. Edit Team*"
+      puts "5. Edit Team"
       puts "6. Delete team*"
       puts "7. Finish Season*"
       page_divide
@@ -76,24 +77,79 @@ module Menu
     gets
   end
 
+  def Menu.display_team_names
+    amount_per_line = 5
+    counter = 0
+    puts "Team Names".colorize(:red)
+    @all_teams.each do |team|
+      if counter == 3
+        puts "#{team.name}, "
+        counter = 0
+      else
+        print "#{team.name}, "
+      end
+      counter += 1
+    end
+    puts
+    page_divide
+  end
+
+  def Menu.display_formatted_team(team)
+    puts "Team Name:".colorize(:red) + " #{team.name}"
+    puts "Attack:".colorize(:blue) + " #{team.attack}" + " Defense:".colorize(:blue) + " #{team.defense}"+" Luck:".colorize(:blue) + " #{team.luck}"
+    puts "Preferred Conditions:".colorize(:yellow) + " #{team.condition_preference}"
+  end
+
   # Menu Methods Calling Other Classes
 
   def Menu.create_team
     clear_screen
     team_complete = false
     while team_complete == false
-      puts "Please enter the name of your team:"
-      prompt
-      team_name  = get_input
-      puts "Please enter the team attack strength (1 to 10)"
-      prompt
-      attack = get_input
-      puts "Please enter the team defense strength (1 to 10)"
-      prompt
-      defense = get_input
-      puts "Does this team play better in wet or dry conditions? ('wet' or 'dry')"
-      prompt
-      condition_preference = get_input
+      verify_name = false
+      while verify_name == false
+        puts "Please enter the name of your team:"
+        prompt
+        team_name  = get_input
+        if @all_teams.any? {|team| team.name == team_name}
+          puts "#{team_name} already taken. Please select a new name."
+        else
+          verify_name = true
+        end
+      end
+      verify_attack = false
+      while verify_attack == false
+        puts "Please enter the team attack strength (1 to 10)"
+        prompt
+        attack = get_input.to_i
+        if attack <= 0 || attack > 10
+          puts "Invalid number"
+        else
+          verify_attack = true
+        end
+      end
+      verify_defense = false
+      while verify_defense == false
+        puts "Please enter the team defense strength (1 to 10)"
+        defense = get_input.to_i
+        if defense <= 0 || defense > 10
+          puts "Invalid number"
+        else
+          verify_defense = true
+        end
+      end
+      verify_conditions = false
+      while verify_conditions == false
+        puts "Does this team play better in wet or dry conditions? ('wet' or 'dry')"
+        prompt
+        condition_preference = get_input.downcase
+        if condition_preference == 'wet' || condition_preference == 'dry'
+          verify_conditions = true
+        else
+          puts "Please enter wet or dry"
+        end
+      end
+
       luck = rand(1..10)
       puts "Team luck has been randomly calculated as #{luck}"
       page_divide
@@ -102,14 +158,15 @@ module Menu
       puts "Defense:".colorize(:yellow) + " #{defense}"
       puts "Luck:".colorize(:yellow) + " #{luck}"
       puts "Condition Preference:".colorize(:yellow) + " #{condition_preference}"
-      puts "Are you happy with this? (Y/N)"
+      puts "Are you happy with these stats? (y/n)"
       prompt
       happy = get_input.upcase
       happy == "Y" ? team_complete = true : team_complete = false
     end
-    team_information = {name: team_name, attack: attack.to_i, defense: defense.to_i, luck: luck, condition_preference: condition_preference}
+    team_information = {name: team_name, attack: attack, defense: defense, luck: luck, condition_preference: condition_preference}
     team = Team.new(team_information)
     @all_teams << team
+    puts "#{team_name} added."
     press_any_key_to_continue
   end
 
@@ -119,9 +176,7 @@ module Menu
     page_divide
     team_counter = 0
     @all_teams.each do |team|
-      puts "Team Name:".colorize(:red) + " #{team.name}"
-      puts "Attack:".colorize(:blue) + " #{team.attack}" + " Defense:".colorize(:blue) + " #{team.defense}"+" Luck:".colorize(:blue) + " #{team.luck}"
-      puts "Preferred Conditions:".colorize(:yellow) + " #{team.condition_preference}"
+      display_formatted_team(team)
       page_divide
       team_counter += 1
       #paginate at 4 items
@@ -152,43 +207,61 @@ module Menu
 
   def Menu.edit_team
     clear_screen
-    puts
-    @all_teams.each do |team|
-      print "#{team.name}, "
-    end
-    puts
-    puts "Please enter the name of team that you'd like to edit"
-    prompt
-    selection = get_input
-    team_to_edit = find_team(selection)
+    display_team_names
+    puts "Leave the field blank to leave the team info the same"
+    team_to_edit = find_team
     puts "Please enter the new name for the team"
+    puts "Leave blank to remain the same"
     prompt
     new_name = get_input
     puts "Please enter the new attack value for the team"
+    puts "Leave blank to remain the same"
     prompt
     new_attack = get_input
     puts "Please enter the new defense value for the team"
+    puts "Leave blank to remain the same"
     prompt
-    new_ = get_input
-    team_to_edit.change_team_values(new_name, new_attack, new_)
-    puts "New Values"
-    puts team_to_edit.name
-    puts team_to_edit.attack
-    puts team_to_edit.defense
+    new_defense = get_input
+    puts "Please enter the new conditions preference value ('wet' or 'dry') for the team"
+    puts "Leave blank to remain the same"
+    prompt
+    new_conditions_preference = get_input
+    team_to_edit.edit_team_values(new_name, new_attack, new_defense, new_conditions_preference)
+    puts "New Values".colorize(:green)
+    display_formatted_team(team_to_edit)
     press_any_key_to_continue
   end
 
-  def Menu.find_team(name)
-    @all_teams.each_with_index do |team, index|
-      if team.name == name
-        puts "#{team.name} found!"
-        press_any_key_to_continue
-        return @all_teams[index]
+  def Menu.find_team
+    found = false
+    while found == false
+      puts "Please enter the name of the team"
+      prompt
+      selection = get_input
+      @all_teams.each_with_index do |team, index|
+        if team.name == selection
+          puts "#{team.name} found!"
+          return @all_teams[index]
+        end
       end
+      puts "Team not found."
     end
-    puts "Team Not Found"
-    press_any_key_to_continue
   end
 
+  def Menu.simulate_game
+    clear_screen
+    if @all_teams.length < 2
+      puts "Not enough teams entered to play a game. Returning to menu."
+      press_any_key_to_continue
+    else
+      display_team_names
+      puts "Home team"
+      home_team = find_team
+      puts "Away team"
+      away_team = find_team
+      game = Game.new(home_team, away_team)
+      game.play
+    end
+  end
 end
 Menu.main_menu
