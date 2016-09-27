@@ -16,14 +16,15 @@ module Menu
       page_divide
       puts "Please select from the following options"
       puts "1. Simulate Game"
-      puts "2. See Season Results*"
+      puts "2. See Season Results"
       puts "3. See All Teams"
       puts "4. Create Team"
       puts "5. Edit Team"
-      puts "6. Delete team*"
-      puts "7. Finish Season*"
+      puts "6. Delete Team*"
+      puts "7. Deletes Season Information"
       page_divide
       puts "8. Exit Application".colorize(:red)
+      page_divide
       puts "9. CHEAT MODE! Auto-populate teams".colorize(:yellow)
       prompt
       selection = $stdin.gets.chomp
@@ -272,6 +273,12 @@ module Menu
 
   def Menu.see_season_results
     Game.season_results
+  end
+
+  def Menu.delete_team
+    puts "Delete Team"
+    team_to_delete = find_team
+    @all_teams.delete(team_to_delete)
   end
 
 end
