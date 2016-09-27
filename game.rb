@@ -8,9 +8,6 @@ class Game
     @result = {home_team: home_team, away_team: away_team, score: [0,0], status: "Pending"}
   end
 
-  def check
-    "HOLLA"
-  end
   # Big gnarly method that simulates a game
   def play
     puts @home_team

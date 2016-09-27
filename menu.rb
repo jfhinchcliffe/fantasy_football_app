@@ -16,19 +16,18 @@ module Menu
       puts "Currently #{@all_teams.length} teams in the comp"
       page_divide
       puts "Please select from the following options"
-      puts "1. Simulate Game"
+      puts "1. Simulate Game WIP"
       puts "2. See Season Results"
       puts "3. See All Teams"
-      puts "4. Create Team"
+      puts "4. Build New Team"
       puts "5. Edit Team"
-      puts "6. Delete Team*"
-      puts "7. Deletes Season Information"
+      puts "6. Delete Team WIP"
+      puts "7. Deletes Season Information WIP"
       page_divide
       puts "8. Exit Application".colorize(:red)
       page_divide
-      puts "9. CHEAT MODE! Auto-populate teams".colorize(:yellow)
-      prompt
-      selection = $stdin.gets.chomp
+      puts "9. CHEAT MODE! Auto-populate a team".colorize(:yellow)
+      selection = MenuHelper.query("Please make a selection")
       case selection
         when "1"
           simulate_game
@@ -37,7 +36,7 @@ module Menu
         when "3"
           see_all_teams
         when "4"
-          create_team
+          build_new_team
         when "5"
           edit_team
         when "6"
@@ -66,14 +65,6 @@ module Menu
     puts "=" * 40
   end
 
-  def Menu.prompt
-    print "> "
-  end
-
-  def Menu.get_input
-    $stdin.gets.chomp
-  end
-
   def Menu.press_any_key_to_continue
     puts "Press any key to continue"
     gets
@@ -93,64 +84,28 @@ module Menu
 
   # Menu Methods Calling Other Classes
 
-  def Menu.create_team
+  def Menu.build_new_team
     clear_screen
     team_complete = false
     while team_complete == false
-      verify_name = false
-      while verify_name == false
-        team_name  = MenuHelper.query("Please enter the name of your team")
-        if @all_teams.any? {|team| team.name == team_name}
-          puts "#{team_name} already taken. Please select a new name."
-        else
-          verify_name = true
-        end
-      end
-      verify_attack = false
-      while verify_attack == false
-        attack = MenuHelper.query("Please enter the team attack strength (1 to 10)").to_i
-        if attack <= 0 || attack > 10
-          puts "Invalid number"
-        else
-          verify_attack = true
-        end
-      end
-      verify_defense = false
-      while verify_defense == false
-        defense = MenuHelper.query("Please enter the team defense strength (1 to 10)").to_i
-        if defense <= 0 || defense > 10
-          puts "Invalid number"
-        else
-          verify_defense = true
-        end
-      end
-      verify_conditions = false
-      while verify_conditions == false
-        condition_preference = MenuHelper.query("Does this team play better in wet or dry conditions? ('wet' or 'dry')").downcase
-        if condition_preference == 'wet' || condition_preference == 'dry'
-          verify_conditions = true
-        else
-          puts "Please enter wet or dry"
-        end
-      end
-
-      luck = rand(1..10)
-      puts "Team luck has been randomly calculated as #{luck}"
+      team_name = MenuHelper.unique_team_name_verification(@all_teams)
+      attack = MenuHelper.stat_verification("attack")
+      defense = MenuHelper.stat_verification("defense")
+      condition_preference = MenuHelper.acceptable_response(["wet","dry"])
+      luck = MenuHelper.num_generator(10, "luck")
       page_divide
-      puts "Name: ".colorize(:yellow) + "#{team_name}"
-      puts "Attack: ".colorize(:yellow) + "#{attack}"
-      puts "Defense:".colorize(:yellow) + " #{defense}"
-      puts "Luck:".colorize(:yellow) + " #{luck}"
-      puts "Condition Preference:".colorize(:yellow) + " #{condition_preference}"
-      puts "Are you happy with these stats? (y/n)"
-      prompt
-      happy = get_input.upcase
-      happy == "Y" ? team_complete = true : team_complete = false
+      MenuHelper.pretty_format_team({name: team_name, attack: attack, defense: defense, luck: luck, condition_preference: condition_preference})
+      happy = MenuHelper.query("Are you happy with these stats? (y/n)").downcase
+      happy == "y" ? team_complete = true : team_complete = false
     end
     team_information = {name: team_name, attack: attack, defense: defense, luck: luck, condition_preference: condition_preference}
+    create_team(team_information)
+  end
+
+  def Menu.create_team(team_information)
     team = Team.new(team_information)
     @all_teams << team
-    puts "#{team_name} added."
+    puts "#{team.name} added."
     press_any_key_to_continue
   end
 
@@ -175,19 +130,8 @@ module Menu
   end
   #quick hacky method to automatically fill the team list.
   def Menu.auto_populate_teams
-    team_array = [
-                  {name: "Bulls", attack: 9, defense: 5, luck: 3, condition_preference: "dry"},
-                  {name: "Goats", attack: 8, defense: 4, luck: 2, condition_preference: "wet"},
-                  {name: "Bears", attack: 7, defense: 3, luck: 1, condition_preference: "dry"},
-                  {name: "Anvils", attack: 6, defense: 2, luck: 9, condition_preference: "wet"},
-                  {name: "Snakes", attack: 5, defense: 1, luck: 8, condition_preference: "dry"}
-                  ]
-    team_array.each do |team_info|
-      #team = Team.new(team_info)
-      @all_teams << Team.new(team_info)
-    end
-    puts "Cheat mode engaged! Teams automatically added!"
-    press_any_key_to_continue
+    new_team = MenuHelper.team_constructor
+    create_team(new_team)
   end
 
   def Menu.edit_team
@@ -195,10 +139,12 @@ module Menu
     display_team_names
     puts "NOTE:".colorize(:red) + " Leave the field blank to leave the team info the same"
     team_to_edit = find_team
+
     new_name = MenuHelper.query("Please enter the new name for the team")
     new_attack = MenuHelper.query("Please enter the new attack value for the team")
     new_defense = MenuHelper.query("Please enter the new defense value for the team")
     new_conditions_preference = MenuHelper.query("Please enter the new conditions preference value ('wet' or 'dry') for the team")
+
     team_to_edit.edit_team_values(new_name, new_attack, new_defense, new_conditions_preference)
     puts "New Values".colorize(:green)
     display_formatted_team(team_to_edit)

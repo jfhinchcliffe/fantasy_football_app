@@ -4,12 +4,16 @@
 
 *Problem*
 - User wants to simulate the result of a football game without having to play.
+
 *Actions*
+
 - Create teams (with stats)
 - Save teams
 - Simulate games between teams
 - Save results to file
+
 *User Stories*
+
 - As a user, I want to be able to enter team information
 - As a user, I want to simulate a game and save the results
 
