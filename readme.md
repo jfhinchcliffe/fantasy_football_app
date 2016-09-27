@@ -17,11 +17,22 @@
 - Setup verification for values  attack and defense should be 1-10 and conditions dry or wet
 - Make sure that team names can't be the same.
 - refactor / dry up some of those long gnarly methods in the menu.rb file
+- split out 'create_team' into its' own method
 - create an algorithm to simulate a game and return a game result
   - home team get a bonus
   - preferred conditions (dry or wet) gets a bonus
   - need to turn attack and defense stats against one another
   - luck can play a part (underdogs can occasionally win)
+
+  team_1_name | attack(5) | defense(7) | luck(8)
+  team_2_name | attack(10) | defense(9) | luck(5)
+
+  1. team_1_name.attack - team_2_name.defense == -4 + 10 == 6
+  2. team_2_name.attack - team_2_name.defense == 3 + 10 == 14
+  3. add luck rand(0..team_1_name.luck) * luck == 6 * 2
+  4. add luck rand(0..team_2_name.luck) * luck == 3 * 5
+
+  home_team modifier
 
 ##Setup
 

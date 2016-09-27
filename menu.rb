@@ -15,7 +15,7 @@ module Menu
       puts "Currently #{@all_teams.length} teams in the comp"
       page_divide
       puts "Please select from the following options"
-      puts "1. Simulate Game*"
+      puts "1. Simulate Game"
       puts "2. See Season Results*"
       puts "3. See All Teams"
       puts "4. Create Team"
@@ -54,7 +54,7 @@ module Menu
     end
   end
 
-  # Menu Formatting Methods
+  # Menu Format Methods
 
   def Menu.clear_screen
     system "clear"
@@ -263,5 +263,16 @@ module Menu
       game.play
     end
   end
+
+  def Menu.finish_season
+    puts "Wiping season"
+    press_any_key_to_continue
+    Game.finish_season
+  end
+
+  def Menu.see_season_results
+    Game.season_results
+  end
+
 end
 Menu.main_menu
