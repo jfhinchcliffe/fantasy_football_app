@@ -1,5 +1,6 @@
 require 'csv'
 class Game
+  attr_reader :home_team, :away_team, :result
 
   def initialize(home_team, away_team)
     @home_team = home_team
@@ -8,8 +9,7 @@ class Game
   end
 
   def check
-    puts "HOLLA"
-    gets
+    "HOLLA"
   end
   # Big gnarly method that simulates a game
   def play
