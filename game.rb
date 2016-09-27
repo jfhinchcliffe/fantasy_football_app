@@ -41,10 +41,6 @@ class Game
     end
   end
 
-  def Game.finish_season
-    File.open('football_season.csv', 'w') {}
-  end
-
   def Game.season_results
     CSV.foreach('football_season.csv') do |row|
       puts "#{row[0]} vs #{row[1]}, score #{row[2]}"

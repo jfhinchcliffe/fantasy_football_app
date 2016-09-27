@@ -2,6 +2,7 @@ require 'colorize'
 require './team'
 require './game'
 require './season'
+require './menu_helper'
 
 module Menu
 
@@ -79,26 +80,15 @@ module Menu
   end
 
   def Menu.display_team_names
-    amount_per_line = 5
-    counter = 0
-    puts "Team Names".colorize(:red)
     @all_teams.each do |team|
-      if counter == 3
-        puts "#{team.name}, "
-        counter = 0
-      else
-        print "#{team.name}, "
-      end
-      counter += 1
+      display_options = {name: true, attack: false, defense: false, luck: false, condition_preference: false}
+      display_formatted_team(team, display_options)
     end
-    puts
-    page_divide
   end
 
-  def Menu.display_formatted_team(team)
-    puts "Team Name:".colorize(:red) + " #{team.name}"
-    puts "Attack:".colorize(:blue) + " #{team.attack}" + " Defense:".colorize(:blue) + " #{team.defense}"+" Luck:".colorize(:blue) + " #{team.luck}"
-    puts "Preferred Conditions:".colorize(:yellow) + " #{team.condition_preference}"
+  def Menu.display_formatted_team(team, display_options = {name: true, attack: true, defense: true, luck: true, condition_preference: true}
+)
+    MenuHelper.display_team_name(team, display_options)
   end
 
   # Menu Methods Calling Other Classes
@@ -177,7 +167,8 @@ module Menu
     page_divide
     team_counter = 0
     @all_teams.each do |team|
-      display_formatted_team(team)
+      display_options = {name: true, attack: true, defense: true, luck: true, condition_preference: true}
+      display_formatted_team(team, display_options)
       page_divide
       team_counter += 1
       #paginate at 4 items
@@ -239,14 +230,10 @@ module Menu
       puts "Please enter the name of the team"
       prompt
       selection = get_input
-      @all_teams.each_with_index do |team, index|
-        if team.name == selection
-          puts "#{team.name} found!"
-          return @all_teams[index]
-        end
-      end
-      puts "Team not found."
+      result = MenuHelper.find_team(@all_teams, selection)
+      result != false ? found = true : found = false
     end
+    return result
   end
 
   def Menu.simulate_game
@@ -255,10 +242,11 @@ module Menu
       puts "Not enough teams entered to play a game. Returning to menu."
       press_any_key_to_continue
     else
+      page_divide
       display_team_names
-      puts "Home team"
+      puts "Enter home team"
       home_team = find_team
-      puts "Away team"
+      puts "Enter away team"
       away_team = find_team
       game = Game.new(home_team, away_team)
       game.play
@@ -268,7 +256,7 @@ module Menu
   def Menu.finish_season
     puts "Wiping season"
     press_any_key_to_continue
-    Game.finish_season
+    MenuHelper.finish_season
   end
 
   def Menu.see_season_results
