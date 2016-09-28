@@ -202,9 +202,9 @@ module Menu
 
   def self.loading_faker
     puts
-    loading_bar = [' ⚽ ', ' 🔮 ', ' 🎾 ', ' 🏐 ', ' 🎱 ', ' 🎳 ', ' 🏹 ' ]
+    loading_bar = [' 👮 ', ' 👰 ', ' 💁 ', ' 👳 ', ' 👱 ', ' 👴 ', ' 👧 ' ]
     12.times do
-      sleep(0.4)
+      sleep(0.1)
       print loading_bar.sample
     end
     puts
