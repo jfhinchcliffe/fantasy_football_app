@@ -80,8 +80,8 @@ module MenuHelper
   end
 
   def MenuHelper.team_constructor
-    prepend_names = ["Bug","Snot","Snuggle","Jet","Hung","Gronk","Butt","Slug"]
-    append_names = ["sters","ists","hammers","bads","greasers","elopes","snipes","sniffers"]
+    prepend_names = ["Bug","Snot","Snug","Jet","Hung","Gronk","Butt","Slug"]
+    append_names = ["sters","ists","hams","bads","grease","elopes","snipes","sniffs"]
     conditions = ["wet","dry"]
     new_team = Hash.new
     new_team[:name] = "#{prepend_names.sample}#{append_names.sample}"

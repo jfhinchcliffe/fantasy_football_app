@@ -46,7 +46,7 @@ class Game
     @result[:score] = [home_team_score, away_team_score]
     @result[:status] = "#{winning_team}, #{@result[:score][0]} to #{@result[:score][1]}"
 
-    #puts @result[:status]
+    puts @result[:status]
 
   end
 

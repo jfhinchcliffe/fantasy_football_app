@@ -171,8 +171,8 @@ module Menu
       game = Game.new(team1, team2)
       clear_screen
       puts "Playing Game".colorize(:green)
+      loading_faker
       game.play
-      puts "#{game.result[:result]}"
       press_any_key_to_continue
       game.save_game_result
 
@@ -199,5 +199,17 @@ module Menu
     puts "Complete"
     press_any_key_to_continue
   end
+
+  def self.loading_faker
+    puts
+    loading_bar = [' ⚽ ', ' 🔮 ', ' 🎾 ', ' 🏐 ', ' 🎱 ', ' 🎳 ', ' 🏹 ' ]
+    12.times do
+      sleep(0.4)
+      print loading_bar.sample
+    end
+    puts
+    puts
+  end
+
 end
 Menu.main_menu
