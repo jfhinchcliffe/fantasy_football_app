@@ -1,4 +1,4 @@
-require './team'
+require '../lib/team'
 
 describe Team do
 

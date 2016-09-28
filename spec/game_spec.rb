@@ -1,12 +1,11 @@
-require './game'
+require '../game'
 require './team'
 
 describe Game do
 
     before do
-      Game.finish_season
-      @team1 = Team.new({name: "Bulls", attack: 9, defense: 5, luck: 3, condition_preference: "dry"})
-      @team2 = Team.new({name: "SnuggleMonsters", attack: 9, defense: 5, luck: 3, condition_preference: "dry"})
+      @team1 = instance_double("Team", :name => "Bulls", :attack => 5, :defense => 6, :luck => 4, :condition_preference => "dry")
+      @team2 = instance_double("Team", :name => "Snakes", :attack => 2, :defense => 7, :luck => 9, :condition_preference => "wet")
       @game = Game.new(@team1, @team2)
     end
 
@@ -14,12 +13,6 @@ describe Game do
       it "outputs the game information home team, away team" do
         expect(@game.home_team.name).to eql(@team1.name)
         expect(@game.away_team.name).to eql(@team2.name)
-      end
-    end
-
-    describe "check" do
-      it "outputs check from the check method" do
-        expect(@game.check).to eql("HOLLA")
       end
     end
 

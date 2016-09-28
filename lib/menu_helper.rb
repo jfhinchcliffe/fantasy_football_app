@@ -1,5 +1,5 @@
 require 'csv'
-require './team'
+# require './team'
 module MenuHelper
 
   def MenuHelper.display_team_name(team, display_options)
