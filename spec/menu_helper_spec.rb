@@ -26,6 +26,32 @@ describe MenuHelper do
 
   end
 
+  describe "random number generator" do
+    it "returns a number between 1 and the range sent in" do
+      expect(MenuHelper.num_generator(10)).to be_between(1, 10)
+    end
+
+
+  end
+
+  describe "team constructor" do
+    before do
+      @generated_team = MenuHelper.team_constructor
+    end
+
+    # it "returns a valid name" do
+    #   expect(@generated_team[:name].class)).to be_(String)
+    # end
+
+    it "returns a valid defense" do
+      expect(@generated_team[:defense]).to be_between(1, 10)
+    end
+
+    it "returns a valid attack" do
+      expect(@generated_team[:attack]).to be_between(1, 10)
+    end
+  end
+
   # describe "unique team names only" do
   #   NEED TO FIGURE OUT HOW TO TEST USER INPUT
   #   it "accepts a new, unique team name " do

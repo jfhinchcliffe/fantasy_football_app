@@ -2,6 +2,12 @@
 
 ### Week 3 CoderFactoryAcademy project
 
+*Use*
+1. Download
+2. Navigate to home directory in terminal
+3. Run `ruby .lib/menu.rb` in terminal
+4. Bask in the glow of what is probably the most full-featured and user friendly football simulator ever concieved by man ⚽  "
+
 *Problem*
 - User wants to simulate the result of a football game without having to play.
 
