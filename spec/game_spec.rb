@@ -1,5 +1,4 @@
-require '../game'
-require './team'
+require_relative '../lib/game'
 
 describe Game do
 

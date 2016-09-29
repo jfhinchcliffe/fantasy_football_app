@@ -1,7 +1,6 @@
 require 'colorize'
 require_relative './team'
 require_relative './game'
-require_relative './season'
 require_relative './menu_helper'
 
 module Menu
@@ -166,7 +165,9 @@ module Menu
     else
       page_divide
       display_team_names
+      puts "Home Team".colorize(:green)
       team1 = find_team
+      puts "Away Team".colorize(:green)
       team2 = find_team
       game = Game.new(team1, team2)
       clear_screen
@@ -203,6 +204,7 @@ module Menu
   def self.loading_faker
     puts
     loading_bar = [' 👮 ', ' 👰 ', ' 💁 ', ' 👳 ', ' 👱 ', ' 👴 ', ' 👧 ' ]
+    puts "The crowd is arriving..."
     12.times do
       sleep(0.1)
       print loading_bar.sample

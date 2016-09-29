@@ -1,4 +1,5 @@
-require '../lib/team'
+require_relative '../lib/team'
+
 
 describe Team do
 
