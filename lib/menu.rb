@@ -67,14 +67,14 @@ module Menu
     puts 'Press any key to continue'
     gets
   end
-
+  # Displays all team names, nicely formatted
   def self.display_team_names
     @all_teams.each do |team|
       display_options = { name: true, attack: false, defense: false, luck: false, condition_preference: false}
       display_formatted_team(team, display_options)
     end
   end
-
+  #Takes a display option depending on what you'd like to return
   def Menu.display_formatted_team(team, display_options = {name: true, attack: true, defense: true, luck: true, condition_preference: true})
     MenuHelper.display_team_name(team, display_options)
   end
@@ -116,7 +116,7 @@ module Menu
       display_formatted_team(team, display_options)
       page_divide
       team_counter += 1
-      # paginate at 4 items
+      # paginate display of teams at 4 items
       next unless team_counter == 4
       press_any_key_to_continue
       clear_screen
@@ -172,6 +172,7 @@ module Menu
       game = Game.new(team1, team2)
       clear_screen
       puts "Playing Game".colorize(:green)
+      #faker illustrates crowd arriving
       loading_faker
       game.play
       press_any_key_to_continue
